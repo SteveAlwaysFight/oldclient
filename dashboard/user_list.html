@@ -1,0 +1,83 @@
+<div class="generic-container" ng-controller="UserController as ctrl">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <span class="lead">User List </span>
+        </div>
+        <div class="panel-body">
+            <div cg-busy="userListPromise" class="well">
+                <table st-table="usersDisplay" st-safe-src="users" class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th><label>
+                            <input type="checkbox" ng-model="selectedAllUsers" ng-click="selectAllUsers()">
+                        </label></th>
+                        <th st-sort="{{$index}}">Index</th>
+                        <th st-sort="ssoId">Name</th>
+                        <th st-sort="email">Email</th>
+                        <th st-sort="companyId">Company Name</th>
+                        <th st-sort="state">Status</th>
+                        <th st-sort="userProfiles">Role</th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat-start="x in usersDisplay">
+                        <td><label>
+                            <input type="checkbox" ng-model="x.selected" ng-change="selectUser()">
+                        </label></td>
+                        <td>{{ $index + 1 }}</td>
+                        <td><a href="" ng-click="editUser(x)">{{x.ssoId}}</a></td>
+                        <td>{{x.email}}</td>
+                        <td>{{x.companyId}}</td>
+                        <td>{{x.state}}</td>
+                        <td><span ng-repeat="role in x.userProfiles" ng-switch="role.type">
+                            <span ng-switch-when="USER" class="label label-success">{{role.type}}</span>
+                            <span ng-switch-when="ADMIN" class="label label-danger">{{role.type}}</span>
+                        </span></td>
+                    </tr>
+                    <tr ng-repeat-end ng-if="x.editing">
+                        <td colspan="5">
+                            <div class="row">
+                                <label class="col-md-3">SSOID:
+                                </label>
+
+                                <div class="col-md-3">
+                                    <input ng-model="x.ssoId" class="form-control" disabled>
+                                </div>
+                                <hr>
+                            </div>
+                            <div class="row">
+                                <label class="col-md-3">Folder:</label>
+
+                                <div class="col-md-3">
+                                    <div ng-dropdown-multiselect="" options="folders" selected-model="x.folders"
+                                         extra-settings="x.editSetting">>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="hero-unit">
+                                        <span ng-repeat="folder in x.folders">
+                                        <span class="label label-default">{{folder.name}}<span
+                                                class="glyphicon glyphicon-remove" ng-click="editUser(x).deleteFolder(folder)"></span></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-default" ng-click="updateUser(x)">Update</button>
+                            <button class="btn btn-warning" ng-click=" loadAll()">Cancel</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemPerPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<div cg-busy="userCustomizedElementsTabPromise" ng-controller="UserCustomizedElementController">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ng-class="{'active':menu.selected}" ng-repeat="menu in customizedElementsMenus"><a
+                href="" ng-click="menuSelect(menu)" aria-controls="editor" role="tab"
+                data-toggle="tab">{{menu.name}}</a></li>
+    </ul>
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div cg-busy="userCustomizedElementsTabContentPromise" role="tabpanel" class="tab-pane active ">
+            <div class="container">
+                <div class="col-md-3 fade-in" ng-repeat="element in allElements track by $index">
+                    <div customized-element-card class="customized-element-card panel panel-info" cg-busy="allElements[{{$index}}].promise">
+                        <div class="panel-heading">{{$index}}
+                            <div class="pull-right" ng-show="!element.isNew">
+                                <a class="close" href="" ng-click="deleteRecord(element)"><i
+                                        class="fa fa-times"></i></a>
+                                <a class="close" href="" ng-click="editRecord(element)"><i class="fa fa-edit"></i></a>
+                            </div>
+                        </div>
+
+                        <div class="panel-body">
+                            <plus-div ng-if="!element.editing && element.isNew" mouse-click-event="editRecord"
+                                      mouse-click-param="element"></plus-div>
+                            <div ng-show="!element.editing &&!element.isNew">
+                                <ul class="list-unstyled invoice-details">
+                                    <li ng-repeat="field in element.values">
+                                        <strong>{{field.customizedElementField.name}}:</strong>{{field.value}}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="form-group" ng-show="element.editing" ng-repeat="field in element.values">
+                                <label for="{{field.id}}" class="col-sm-2 control-label">{{field.customizedElementField.name}}</label>
+
+                                <div class="col-md-10">
+                                    <input id="{{field.id}}" class="underline form-control" ng-show="element.editing"
+                                           ng-model="field.value">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer" ng-show="element.editing">
+                            <button class="btn btn-info" ng-click="saveRecord(element)">Save</button>
+                            <button class="btn btn-default" ng-click="element.editing = false">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<style>
+    #editor {
+        height: 600px;
+        padding: 10px 0px;
+    }
+</style>
